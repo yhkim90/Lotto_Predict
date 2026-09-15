@@ -124,16 +124,13 @@
       RecentWindow: recentWindow,
       CombinationCount: 5
     });
-    statusText = engine.modeToKorean(engine.modeFromKorean(prefs.mode)) +
-      " 기준으로 분석 추천번호 " + lastCombos.length + "개를 생성했습니다.";
+    statusText = "";
     savePrefs();
     render();
   }
 
   function renderCombos() {
-    if (!lastCombos.length) {
-      return '<p class="lede">분석범위와 방식을 고른 뒤 추천번호를 생성하세요.</p>';
-    }
+    if (!lastCombos.length) return "";
     return lastCombos.map(function (combo) {
       return '<div class="card combo">' +
         '<div class="combo-row"><strong>' + LABELS[combo.Index - 1] + "</strong>" +
@@ -143,23 +140,11 @@
     }).join("");
   }
 
-  function autoNote() {
-    var last = latest();
-    if (!last) return busy ? "공식 당첨번호를 자동으로 불러오는 중입니다." : "당첨번호를 준비하는 중입니다.";
-    return "1회부터 " + last.n + "회까지 공식 당첨번호를 자동으로 반영합니다. 번호를 직접 넣을 필요는 없습니다.";
-  }
-
   function renderHome() {
     var last = latest();
     root.innerHTML =
       '<div class="topbar"><button class="ghost" type="button" data-reload' + (busy ? " disabled" : "") + ">새로고침</button><h1>LOTTO 6/45</h1><span class=\"ghost\"></span></div>" +
-      '<p class="site">분석 추천</p>' +
-      '<div class="stats">' +
-        '<div class="card"><small>최신 회차</small><strong>' + (last ? last.n + "회" : "-") + "</strong></div>" +
-        '<div class="card"><small>자동 반영</small><strong>' + draws.length + "</strong></div>" +
-        '<div class="card"><small>방식</small><strong>' + escapeHtml(prefs.mode) + "</strong></div>" +
-      "</div>" +
-      '<p class="lede">' + escapeHtml(autoNote()) + (last ? "<br>최신 " + last.n + "회 · " + last.d : "") + "</p>" +
+      '<p class="summary">' + (last ? last.n + "회 · " + last.d : (busy ? "당첨번호 불러오는 중" : "당첨번호 준비 중")) + "</p>" +
       (statusText ? '<p class="ok">' + escapeHtml(statusText) + "</p>" : "") +
       '<div class="grid2">' +
         '<label class="field"><span>분석범위</span><select id="range">' +
@@ -173,10 +158,9 @@
           }).join("") +
         "</select></label>" +
       "</div>" +
-      '<button class="btn btn-primary" id="gen-btn"' + (busy && !draws.length ? " disabled" : "") + ">추천번호 생성</button>" +
-      '<div class="stack" style="margin-top:16px">' + renderCombos() + "</div>" +
-      (lastCombos.length ? '<button class="btn btn-secondary" id="regen-btn">다시 생성</button>' : "") +
-      '<p class="disclaimer">과거 당첨번호의 통계적 특성을 분석해 조합을 만듭니다. 실제 당첨을 보장하지 않습니다.</p>' +
+      '<button class="btn btn-primary" id="gen-btn"' + (busy && !draws.length ? " disabled" : "") + ">" +
+        (lastCombos.length ? "다시 생성" : "추천번호 생성") + "</button>" +
+      '<div class="stack" style="margin-top:10px">' + renderCombos() + "</div>" +
       tabBar("home");
     bindNav();
     document.getElementById("range").addEventListener("change", function () {
@@ -188,8 +172,6 @@
       savePrefs();
     });
     document.getElementById("gen-btn").addEventListener("click", generate);
-    var regen = document.getElementById("regen-btn");
-    if (regen) regen.addEventListener("click", generate);
   }
 
   function renderHistory() {
@@ -326,18 +308,18 @@
     if (busy) return;
     busy = true;
     var before = latest() ? latest().n : 0;
-    if (manual) statusText = "최신 당첨번호를 다시 불러오는 중입니다.";
-    else if (!draws.length) statusText = "공식 당첨번호를 자동으로 불러오는 중입니다.";
+    if (manual) statusText = "최신 회차 확인 중...";
+    else if (!draws.length) statusText = "당첨번호 불러오는 중...";
     render();
     syncBundled()
       .catch(function () { return 0; })
       .then(function () { return syncOfficial().catch(function () { return 0; }); })
       .then(function () {
         var now = latest() ? latest().n : 0;
-        if (!now) statusText = "당첨번호를 아직 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.";
-        else if (now > before) statusText = "최신 " + now + "회까지 공식 당첨번호를 반영했습니다.";
-        else if (manual) statusText = "이미 최신 " + now + "회까지 반영되어 있습니다.";
-        else statusText = "1회부터 " + now + "회까지 공식 당첨번호를 자동 반영 중입니다.";
+        if (!now) statusText = "당첨번호를 아직 못 불러왔습니다. 새로고침해 주세요.";
+        else if (now > before) statusText = "최신 " + now + "회를 반영했습니다.";
+        else if (manual) statusText = "이미 최신 " + now + "회입니다.";
+        else statusText = "";
         savePrefs();
       })
       .finally(function () {
