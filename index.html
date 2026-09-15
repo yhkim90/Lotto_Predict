@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="로또 분석">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#1D4F91">
+  <title>LOTTO 6/45 분석기</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <style>
+    :root {
+      --bg: #F4F6F8;
+      --surface: #FFFFFF;
+      --text: #1A1A1A;
+      --muted: #667085;
+      --accent: #1D4F91;
+      --line: #E4E7EC;
+      --ok: #1D4F91;
+      --radius: 16px;
+      --tap: 44px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+    body {
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    }
+    button, input, select { font: inherit; color: inherit; }
+    button { appearance: none; border: 0; background: none; padding: 0; cursor: pointer; }
+    .app { width: min(430px, 100%); margin: 0 auto; padding: 8px 20px 108px; }
+    .tabbar {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+      background: var(--bg); border-top: 1px solid var(--line);
+    }
+    .tabbar button { min-height: 48px; font-size: 12px; font-weight: 700; color: var(--muted); }
+    .tabbar button.on { color: var(--accent); }
+    .topbar { display: flex; align-items: center; min-height: var(--tap); gap: 8px; margin-bottom: 8px; }
+    .topbar h1 { flex: 1; margin: 0; font-size: 20px; font-weight: 800; text-align: center; color: var(--accent); }
+    .ghost { min-width: 52px; min-height: var(--tap); }
+    .lede, .muted, .disclaimer { color: var(--muted); font-size: 14px; }
+    .lede { margin: 0 0 16px; }
+    .site { margin: 0 0 12px; color: var(--accent); font-size: 13px; font-weight: 700; }
+    .ok { color: var(--ok); font-size: 14px; font-weight: 700; }
+    .disclaimer { margin: 18px 0 0; text-align: center; font-size: 12px; }
+    .card {
+      padding: 14px 16px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--line);
+    }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .stats .card { text-align: center; padding: 12px 8px; }
+    .stats small { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .stats strong { display: block; margin-top: 4px; font-size: 18px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; min-height: 52px; margin-top: 12px; border-radius: 12px; font-weight: 700;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: #E8EEF7; color: var(--accent); }
+    .btn:disabled { opacity: 0.5; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field span { color: var(--muted); font-size: 13px; font-weight: 700; }
+    input, select {
+      width: 100%; min-height: var(--tap); padding: 10px 12px;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+    }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+    .stack-text p { margin: 0 0 12px; }
+    .stack-text p:last-child { margin: 0; }
+    .combo-row { display: flex; align-items: center; gap: 8px; }
+    .combo-row strong { width: 28px; font-size: 16px; }
+    .balls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; flex: 1; }
+    .ball {
+      width: 36px; height: 36px; border-radius: 50%;
+      color: #fff; font-size: 13px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .ball.bonus { box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--accent); }
+    .plus { color: var(--muted); font-weight: 800; }
+    .meta { margin: 8px 0 0; text-align: center; color: var(--muted); font-size: 12px; }
+    .history-row { display: flex; flex-direction: column; gap: 8px; }
+    .empty { text-align: center; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="app" class="app"></div>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
