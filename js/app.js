@@ -102,6 +102,9 @@
     root.querySelectorAll("[data-go]").forEach(function (el) {
       el.addEventListener("click", function () { go(el.getAttribute("data-go")); });
     });
+    root.querySelectorAll("[data-reload]").forEach(function (el) {
+      el.addEventListener("click", function () { autoSync(true); });
+    });
   }
 
   function rangeValue() {
@@ -149,7 +152,7 @@
   function renderHome() {
     var last = latest();
     root.innerHTML =
-      '<div class="topbar"><span class="ghost"></span><h1>LOTTO 6/45</h1><span class="ghost"></span></div>' +
+      '<div class="topbar"><button class="ghost" type="button" data-reload' + (busy ? " disabled" : "") + ">새로고침</button><h1>LOTTO 6/45</h1><span class=\"ghost\"></span></div>" +
       '<p class="site">분석 추천</p>' +
       '<div class="stats">' +
         '<div class="card"><small>최신 회차</small><strong>' + (last ? last.n + "회" : "-") + "</strong></div>" +
@@ -202,7 +205,7 @@
         ballsHtml(d.nums, d.b) + "</div>";
     }).join("");
     root.innerHTML =
-      '<div class="topbar"><span class="ghost"></span><h1>과거 데이터</h1><span class="ghost"></span></div>' +
+      '<div class="topbar"><button class="ghost" type="button" data-reload' + (busy ? " disabled" : "") + ">새로고침</button><h1>과거 데이터</h1><span class=\"ghost\"></span></div>" +
       '<p class="lede">공식 당첨번호 ' + draws.length + "회를 자동으로 불러왔습니다. 직접 입력하지 않습니다.</p>" +
       '<input id="search" type="search" placeholder="회차·날짜·번호 검색" value="' + escapeHtml(q) + '">' +
       '<div class="stack" style="margin-top:12px">' + (list || '<div class="empty card">표시할 회차가 없습니다.</div>') + "</div>" +
@@ -319,19 +322,21 @@
       });
   }
 
-  function autoSync() {
+  function autoSync(manual) {
     if (busy) return;
     busy = true;
     var before = latest() ? latest().n : 0;
-    if (!draws.length) statusText = "공식 당첨번호를 자동으로 불러오는 중입니다.";
+    if (manual) statusText = "최신 당첨번호를 다시 불러오는 중입니다.";
+    else if (!draws.length) statusText = "공식 당첨번호를 자동으로 불러오는 중입니다.";
     render();
     syncBundled()
       .catch(function () { return 0; })
       .then(function () { return syncOfficial().catch(function () { return 0; }); })
       .then(function () {
         var now = latest() ? latest().n : 0;
-        if (!now) statusText = "당첨번호를 아직 불러오지 못했습니다. 인터넷 연결을 확인하면 자동으로 다시 시도합니다.";
-        else if (now > before) statusText = "최신 " + now + "회까지 공식 당첨번호를 자동 반영했습니다.";
+        if (!now) statusText = "당첨번호를 아직 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.";
+        else if (now > before) statusText = "최신 " + now + "회까지 공식 당첨번호를 반영했습니다.";
+        else if (manual) statusText = "이미 최신 " + now + "회까지 반영되어 있습니다.";
         else statusText = "1회부터 " + now + "회까지 공식 당첨번호를 자동 반영 중입니다.";
         savePrefs();
       })

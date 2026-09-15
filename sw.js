@@ -1,4 +1,4 @@
-const CACHE = "lotto-predict-v2";
+const CACHE = "lotto-predict-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
