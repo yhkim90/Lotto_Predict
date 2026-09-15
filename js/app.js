@@ -103,7 +103,7 @@
       el.addEventListener("click", function () { go(el.getAttribute("data-go")); });
     });
     root.querySelectorAll("[data-reload]").forEach(function (el) {
-      el.addEventListener("click", function () { autoSync(true); });
+      el.addEventListener("click", function () { hardRefresh(); });
     });
   }
 
@@ -328,6 +328,34 @@
       });
   }
 
+  function hardRefresh() {
+    statusText = "화면을 다시 받는 중...";
+    render();
+    var tasks = [];
+    if (navigator.serviceWorker) {
+      tasks.push(
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          return Promise.all(regs.map(function (reg) {
+            return reg.update().then(function () { return reg.unregister(); });
+          }));
+        })
+      );
+    }
+    if (window.caches) {
+      tasks.push(
+        caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (key) { return caches.delete(key); }));
+        })
+      );
+    }
+    Promise.all(tasks)
+      .catch(function () {})
+      .then(function () {
+        var base = location.href.split("#")[0].split("?")[0];
+        location.replace(base + "?t=" + Date.now() + (location.hash || "#/"));
+      });
+  }
+
   loadPrefs();
   window.addEventListener("hashchange", render);
   document.addEventListener("visibilitychange", function () {
@@ -337,6 +365,8 @@
   autoSync();
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
+    navigator.serviceWorker.register("sw.js?v=5", { updateViaCache: "none" })
+      .then(function (reg) { return reg.update(); })
+      .catch(function () {});
   }
 })();
