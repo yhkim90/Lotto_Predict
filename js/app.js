@@ -365,7 +365,7 @@
   autoSync();
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js?v=5", { updateViaCache: "none" })
+    navigator.serviceWorker.register("sw.js?v=6", { updateViaCache: "none" })
       .then(function (reg) { return reg.update(); })
       .catch(function () {});
   }

@@ -82,24 +82,24 @@
     .stack { display: flex; flex-direction: column; gap: 8px; }
     .stack-text p { margin: 0 0 12px; }
     .stack-text p:last-child { margin: 0; }
-    .combo-row { display: flex; align-items: center; gap: 6px; }
-    .combo-row strong { width: 24px; font-size: 15px; }
-    .balls { display: flex; flex-wrap: nowrap; gap: 5px; align-items: center; justify-content: center; flex: 1; }
+    .combo-row { display: flex; align-items: center; gap: 8px; }
+    .combo-row strong { width: 28px; font-size: 18px; }
+    .balls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; flex: 1; }
     .ball {
-      width: 32px; height: 32px; border-radius: 50%;
-      color: #fff; font-size: 12px; font-weight: 800;
+      width: 48px; height: 48px; border-radius: 50%;
+      color: #fff; font-size: 18px; font-weight: 800;
       display: inline-flex; align-items: center; justify-content: center;
     }
     .ball.bonus { box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--accent); }
-    .plus { color: var(--muted); font-weight: 800; }
-    .meta { margin: 4px 0 0; text-align: center; color: var(--muted); font-size: 11px; }
+    .plus { color: var(--muted); font-weight: 800; font-size: 18px; }
+    .meta { margin: 6px 0 0; text-align: center; color: var(--muted); font-size: 13px; }
     .history-row { display: flex; flex-direction: column; gap: 8px; }
     .empty { text-align: center; color: var(--muted); }
   </style>
 </head>
 <body>
   <div id="app" class="app"></div>
-  <script src="js/engine.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/engine.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 </body>
 </html>
