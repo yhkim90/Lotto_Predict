@@ -1,4 +1,4 @@
-const CACHE = "lotto-predict-v5";
+const CACHE = "lotto-predict-v7";
 
 self.addEventListener("install", function (event) {
   self.skipWaiting();

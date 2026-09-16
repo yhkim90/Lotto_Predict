@@ -86,9 +86,7 @@
   }
 
   function zoneNote(zoneCount) {
-    if (zoneCount >= 4) return "구간 분산 양호";
-    if (zoneCount === 3) return "구간 분산 보통";
-    return "구간 편중";
+    return "구간 " + zoneCount + "/5";
   }
 
   function comboKey(numbers) {
@@ -375,7 +373,12 @@
       selected.push({ Numbers: combo, Profile: profile, Score: score });
     }
 
-    selected.sort(function (a, b) { return b.Score - a.Score; });
+    for (i = selected.length - 1; i > 0; i--) {
+      var j = Math.floor(random() * (i + 1));
+      var tmp = selected[i];
+      selected[i] = selected[j];
+      selected[j] = tmp;
+    }
     return selected.map(function (c, i) {
       return {
         Index: i + 1,

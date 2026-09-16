@@ -1,7 +1,7 @@
 {
   "name": "LOTTO 6/45 분석기",
   "short_name": "로또 분석",
-  "description": "동행복권 6/45 과거 당첨번호를 같은 기준으로 분석해 추천 조합을 만듭니다.",
+  "description": "동행복권 6/45 과거 당첨 모양으로 5장을 만듭니다. 다음 회차 확률은 모든 조합이 같습니다.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -2,7 +2,7 @@
   "use strict";
 
   var STORAGE = "lotto-predict-v1";
-  var LABELS = ["①", "②", "③", "④", "⑤"];
+  var LABELS = ["1장", "2장", "3장", "4장", "5장"];
   var engine = window.LottoEngine;
   var root = document.getElementById("app");
   var draws = [];
@@ -161,6 +161,7 @@
       '<button class="btn btn-primary" id="gen-btn"' + (busy && !draws.length ? " disabled" : "") + ">" +
         (lastCombos.length ? "다시 생성" : "추천번호 생성") + "</button>" +
       '<div class="stack" style="margin-top:10px">' + renderCombos() + "</div>" +
+      (lastCombos.length ? '<p class="disclaimer">과거 모양과 비슷한 5장입니다. 다음 회차 확률은 모든 조합이 같습니다.</p>' : "") +
       tabBar("home");
     bindNav();
     document.getElementById("range").addEventListener("change", function () {
@@ -209,9 +210,9 @@
         "<p><strong>아이폰에 앱처럼 두기</strong></p>" +
         "<p>Safari로 이 페이지를 연 뒤 공유 버튼 → <strong>홈 화면에 추가</strong>를 누르면 됩니다.</p>" +
         "<p><strong>추천 방식</strong></p>" +
-        "<p>균형형, 통계형, 분산형, 혼합형. 번호 빈도·최근 출현·홀짝·합계·구간·연속수·끝수 중복을 같은 가중치로 점수를 매깁니다.</p>" +
+        "<p>균형형, 통계형, 분산형, 혼합형은 과거 당첨의 흔한 모양을 고르는 필터입니다. 5장의 순위를 매기지 않으며, 적중률은 무작위 5장과 구분되지 않았습니다.</p>" +
         "<p><strong>주의</strong></p>" +
-        "<p>통계 분석일 뿐이며 당첨을 보장하지 않습니다.</p>" +
+        "<p>다음 회차 확률은 모든 6개 조합이 같습니다. 5장 기준 번호 3개 이상은 아무거나 골라도 약 10%입니다.</p>" +
       "</div>" +
       tabBar("info");
     bindNav();
@@ -365,7 +366,7 @@
   autoSync();
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js?v=6", { updateViaCache: "none" })
+    navigator.serviceWorker.register("sw.js?v=7", { updateViaCache: "none" })
       .then(function (reg) { return reg.update(); })
       .catch(function () {});
   }
